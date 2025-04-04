@@ -21,8 +21,14 @@ const formSchema = z.object({
     }).max(50, {
         message: 'Title must be less than 50 characters'
     }),
-    status: z.boolean(),
-    payoutEstonia: z.number().positive().optional().nullable(),
+    activityStatus: z.boolean(),
+    payoutEstonia: z.number().positive().optional().nullable().refine((data) => {
+        if (!data) return true;
+        const decimalPart = data.toString().split('.')[1];
+        return !decimalPart || decimalPart.length <= 2;
+    }, {
+        message: 'Max precision is 2 decimal places'
+    }),
     payoutSpain: z.number().positive().optional().nullable(),
     payoutBulgaria: z.number().positive().optional().nullable(),
 }).refine((data) => {
@@ -39,7 +45,7 @@ export function CampaignCreationForm() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: '',
-            status: false,
+            activityStatus: false,
             payoutEstonia: null,
             payoutBulgaria: null,
             payoutSpain: null,
@@ -68,7 +74,7 @@ export function CampaignCreationForm() {
                 />
                 <FormField
                     control={form.control}
-                    name='status'
+                    name='activityStatus'
                     render = {({ field }) => (
                         <FormItem>
                             <FormLabel>Activity status</FormLabel>
