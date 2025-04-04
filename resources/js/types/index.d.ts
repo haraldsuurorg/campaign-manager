@@ -26,7 +26,7 @@ export interface NavButton {
     title: string;
     icon?: LucideIcon | null;
     isActive?: boolean;
-    onClick?: function;
+    onClick?: () => void;
 }
 
 export interface SharedData {

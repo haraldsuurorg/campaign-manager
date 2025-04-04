@@ -27,6 +27,7 @@ export function NavMain({ items = [] }: { items: NavItem[] | NavButton[] }) {
                         ) : (
                             <SidebarMenuButton
                                 tooltip={{ children: item.title }}
+                                onClick={item.onClick}
                             >
                                 {item.icon && <item.icon />}
                                 <span>{item.title}</span>

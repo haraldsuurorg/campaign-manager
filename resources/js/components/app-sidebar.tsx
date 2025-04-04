@@ -1,20 +1,20 @@
-import { useState } from 'react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
+import { CreateCampaign } from '@/components/create-campaign';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem, NavButton } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Plus } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const [showCreateCampaign, setShowCreateCampaign] = useState(false);
+// const [showCreateCampaign, setShowCreateCampaign] = useState(false);
 
 const mainNavItems: NavButton[] = [
     {
         title: 'Create a campaign',
         icon: Plus,
-        onClick: () => setShowCreateCampaign(true),
+        onClick: () => console.log('test'),
     },
 ];
 
@@ -48,6 +48,7 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} />
+                <CreateCampaign />
             </SidebarContent>
 
             <SidebarFooter>
