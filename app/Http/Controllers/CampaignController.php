@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campaign;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CampaignController extends Controller
@@ -29,22 +30,30 @@ class CampaignController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'user_id' => 'required|numeric',
             'title' => 'required|string',
-            'activityStatus' => 'required|boolean',
-            'payoutEstonia' => 'nullable|numeric|min:0',
-            'payoutSpain' => 'nullable|numeric|min:0',
-            'payoutBulgaria' => 'nullable|numeric|min:0',
+            'activity_status' => 'required|boolean',
+            'payout_estonia' => 'nullable|numeric|min:0',
+            'payout_spain' => 'nullable|numeric|min:0',
+            'payout_bulgaria' => 'nullable|numeric|min:0',
         ]);
 
         // Check if at least one payout is present
-        if (is_null($validated['payoutEstonia']) &&
-            is_null($validated['payoutSpain']) &&
-            is_null($validated['payoutBulgaria'])) {
+        if (is_null($validated['payout_estonia']) &&
+            is_null($validated['payout_spain']) &&
+            is_null($validated['payout_bulgaria'])) {
 
             return response()->json([
                 'message' => 'At least one payout field must be filled'
-            ], 400);
+            ], 422);
         }
+
+        // Get the user using ID
+        $user = User::findOrFail($validated['user_id']);
+
+        $campaign = $user->campaigns()->create($validated);
+
+        return response()->json($campaign, 201);
     }
 
     /**

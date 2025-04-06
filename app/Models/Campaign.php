@@ -15,10 +15,10 @@ class Campaign extends Model
     protected $fillable = [
         'title',
         'user_id',
-        'status',
-        'payoutEstonia',
-        'payoutSpain',
-        'payoutBulgaria'
+        'activity_status',
+        'payout_estonia',
+        'payout_spain',
+        'payout_bulgaria'
     ];
 
     /**

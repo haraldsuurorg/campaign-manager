@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->boolean('activity_status');
-            $table->decimal('payoutEstonia', 10, 2)->nullable();
-            $table->decimal('payoutSpain', 10, 2)->nullable();
-            $table->decimal('payoutBulgaria', 10, 2)->nullable();
+            $table->decimal('payout_estonia', 10, 2)->nullable();
+            $table->decimal('payout_spain', 10, 2)->nullable();
+            $table->decimal('payout_bulgaria', 10, 2)->nullable();
             $table->timestamps();
         });
     }

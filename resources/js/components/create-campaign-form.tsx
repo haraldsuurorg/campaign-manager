@@ -12,6 +12,9 @@ import {
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Switch } from './ui/switch';
+import { useState } from 'react';
+import { usePage } from '@inertiajs/react';
+import { SharedData } from '@/types';
 
 const formSchema = z.object({
     title: z.string({
@@ -40,7 +43,12 @@ const formSchema = z.object({
     path: ['payoutEstonia']
 })
 
+type FormStatus = 'idle' | 'submitting' | 'submitted' | 'error';
+
 export function CampaignCreationForm() {
+    const [formStatus, setFormStatus] = useState<FormStatus>('idle');
+    const userId = usePage<SharedData>().props.auth.user.id;
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -52,8 +60,61 @@ export function CampaignCreationForm() {
         }
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+    const handleResetForm = () => {
+        form.reset();
+        setFormStatus('idle');
+    }
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            setFormStatus('submitting');
+
+            const campaignData = {
+                user_id: userId,
+                title: values.title,
+                activity_status: values.activityStatus,
+                payout_estonia: values.payoutEstonia,
+                payout_spain: values.payoutSpain,
+                payout_bulgaria: values.payoutBulgaria,
+            }
+
+            const response = await fetch('/api/campaigns', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+
+                },
+                body: JSON.stringify(campaignData)
+            });
+
+            const data = await response.json();
+            setFormStatus('submitted');
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Server responded with error:', response.status);
+                setFormStatus('error');
+                return;
+            }
+        } catch (err) {
+            console.error('Error creating campaign:', err);
+            setFormStatus('error');
+        }
+    }
+
+    if (formStatus === 'submitted') {
+        return (
+            <div>
+                <h3>Success!</h3>
+                <p className='mb-4'>Your campaign has been created successfully.</p>
+                <Button
+                    onClick={() => handleResetForm() }
+                    className='flex justify-self-end'
+                >
+                    Create another one?
+                </Button>
+            </div>
+        )
     }
 
     return (
@@ -148,11 +209,25 @@ export function CampaignCreationForm() {
                         </FormItem>
                     )}
                 />
+
+                {formStatus === 'error' && (
+                    <div className='flex-col gap-2'>
+                        <p>There was an error creating your campaign.</p>
+                        <p>Please try again. If the error persists, we kindly ask you to contact our customer support.</p>
+                    </div>
+                )}
+
                 <Button
                     type='submit'
                     className='flex justify-self-end'
+                    disabled={formStatus === 'submitting'}
                 >
-                    Create
+                    {formStatus === 'submitting' ? (
+                        <>
+                            <span>Creating</span>
+                            <span className='animate-pulse'>...</span>
+                        </>
+                    ) : 'Create'}
                 </Button>
             </form>
         </Form>
