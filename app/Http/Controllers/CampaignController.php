@@ -11,9 +11,16 @@ class CampaignController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'required|numeric'
+        ]);
+
+        $user = User::findOrFail($validated['user_id']);
+        $campaigns = $user->campaigns()->orderBy('id', 'desc')->get();
+
+        return response()->json($campaigns);
     }
 
     /**
@@ -48,9 +55,7 @@ class CampaignController extends Controller
             ], 422);
         }
 
-        // Get the user using ID
         $user = User::findOrFail($validated['user_id']);
-
         $campaign = $user->campaigns()->create($validated);
 
         return response()->json($campaign, 201);
@@ -77,7 +82,13 @@ class CampaignController extends Controller
      */
     public function update(Request $request, Campaign $campaign)
     {
-        //
+        $validated = $request->validate([
+            'activity_status' => 'required|boolean'
+        ]);
+
+        $campaign->update($validated);
+
+        return response()->noContent(200);
     }
 
     /**

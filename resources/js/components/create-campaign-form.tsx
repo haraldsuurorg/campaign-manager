@@ -82,7 +82,6 @@ export function CampaignCreationForm() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-
                 },
                 body: JSON.stringify(campaignData)
             });
@@ -91,7 +90,6 @@ export function CampaignCreationForm() {
             setFormStatus('submitted');
 
             if (!response.ok) {
-                const errorText = await response.text();
                 console.error('Server responded with error:', response.status);
                 setFormStatus('error');
                 return;
@@ -127,7 +125,7 @@ export function CampaignCreationForm() {
                         <FormItem>
                             <FormLabel>Title</FormLabel>
                             <FormControl>
-                                <Input {...field} />
+                                <Input {...field} placeholder='My campaign'/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -159,6 +157,7 @@ export function CampaignCreationForm() {
                                 <Input
                                     type='number'
                                     {...field}
+                                    placeholder='2.50'
                                     value={field.value ?? ''}
                                     onChange={e => {
                                         const value = e.target.value;
@@ -179,6 +178,7 @@ export function CampaignCreationForm() {
                                 <Input
                                     type='number'
                                     {...field}
+                                    placeholder='2.50'
                                     value={field.value ?? ''}
                                     onChange={e => {
                                         const value = e.target.value;
@@ -199,6 +199,7 @@ export function CampaignCreationForm() {
                                 <Input
                                     type='number'
                                     {...field}
+                                    placeholder='2.50'
                                     value={field.value ?? ''}
                                     onChange={e => {
                                         const value = e.target.value;

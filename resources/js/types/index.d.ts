@@ -48,3 +48,12 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Campaign {
+    id: number;
+    title: string;
+    activity_status: boolean;
+    payout_estonia: number | null;
+    payout_spain: number | null;
+    payout_bulgaria: number | null;
+}

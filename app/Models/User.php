@@ -48,8 +48,8 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the campaigns associated wot hthe user.
-     * 
+     * Get the campaigns associated wit hthe user.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function campaigns()

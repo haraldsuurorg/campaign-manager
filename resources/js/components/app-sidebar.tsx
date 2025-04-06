@@ -11,11 +11,11 @@ import AppLogo from './app-logo';
 // const [showCreateCampaign, setShowCreateCampaign] = useState(false);
 
 const mainNavItems: NavButton[] = [
-    {
-        title: 'Create a campaign',
-        icon: Plus,
-        onClick: () => console.log('test'),
-    },
+    // {
+    //     title: 'Create a campaign',
+    //     icon: Plus,
+    //     onClick: () => console.log('test'),
+    // },
 ];
 
 const footerNavItems: NavItem[] = [
