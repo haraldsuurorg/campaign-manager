@@ -15,6 +15,7 @@ import { Switch } from './ui/switch';
 import { useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import { SharedData } from '@/types';
+import { emitter } from '@/lib/utils';
 
 const formSchema = z.object({
     title: z.string({
@@ -86,10 +87,12 @@ export function CampaignCreationForm() {
                 body: JSON.stringify(campaignData)
             });
 
-            const data = await response.json();
-            setFormStatus('submitted');
+            if (response.ok) {
+                const data = await response.json();
+                setFormStatus('submitted');
 
-            if (!response.ok) {
+                emitter.emit('campaign-created');
+            } else {
                 console.error('Server responded with error:', response.status);
                 setFormStatus('error');
                 return;

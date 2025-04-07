@@ -3,19 +3,11 @@ import { usePage } from "@inertiajs/react";
 import { SharedData, Campaign } from "@/types";
 import { Switch } from "./ui/switch";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import { emitter } from "@/lib/utils";
 
 export function CampaignList(props: HTMLAttributes<HTMLDivElement>) {
     const userId = usePage<SharedData>().props.auth.user.id;
     const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-
-    // export interface Campaign {
-    //     id: number;
-    //     title: string;
-    //     activityStatus: boolean;
-    //     payoutEstonia: number | null;
-    //     payoutSpain: number | null;
-    //     payoutBulgaria: number | null;
-    // }
 
     async function fetchCampaigns() {
         try {
@@ -28,8 +20,14 @@ export function CampaignList(props: HTMLAttributes<HTMLDivElement>) {
 
             const data = await response.json();
             setCampaigns(data);
+
+            if (!response.ok) {
+                updateNotifications('error', 'Error');
+                console.error(response);
+            }
         } catch (err) {
-            console.log('Error fetching campaigns: ', err);
+            updateNotifications('error', 'Error');
+            console.error('Error fetching campaigns: ', err);
         }
     }
 
@@ -49,18 +47,50 @@ export function CampaignList(props: HTMLAttributes<HTMLDivElement>) {
             })
 
             if (!response.ok) {
+                updateNotifications('error', 'Error')
                 console.error(response);
-                alert('Error updating the activity status');
+            } else {
+                updateNotifications('update', 'Activity status updated');
             }
         } catch(err) {
             console.error('Error updating the activity status', err);
-            alert('Error updating the activity status');
+            updateNotifications('error', 'Error')
         }
     }
 
     useEffect(() => {
         fetchCampaigns();
+
+        const campaignsUpdated = () => {
+            console.log('campaign created');
+            fetchCampaigns();
+        }
+
+        emitter.on('campaign-created', campaignsUpdated);
+
+        return () => {
+            emitter.off('campaigns-created', campaignsUpdated);
+        }
     }, [])
+
+
+    function updateNotifications(type:string, text:string) {
+        const notifications = document.getElementById('notification-messages');
+
+        if (!notifications) return;
+
+        if (type === 'update') {
+            notifications.innerHTML = `<p class='text-sm text-[#23C552]'>${text}</p>`;
+        } else if (type === 'error') {
+            notifications.innerHTML = `<p class='text-sm text-[#F84F31]'>${text}</p>`;
+        }
+
+        setTimeout(() => {
+            if (notifications) {
+                notifications.innerHTML = '';
+            }
+        }, 5000);
+    }
 
     return (
         <div {...props}>
