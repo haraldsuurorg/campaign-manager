@@ -5,18 +5,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from '../ui/button';
 import { Ellipsis, Trash2 } from 'lucide-react';
 import { emitter } from '@/lib/utils';
-
-export type Campaign = {
-    id: number
-    title: string
-    activity_status: boolean
-    payout_estonia: number | null
-    payout_spain: number | null
-    payout_bulgaria: number | null
-}
+import { Campaign } from '@/types';
 
 declare module '@tanstack/react-table' {
-    interface ColumnMeta<TData extends unknown, TValue> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    interface ColumnMeta<TData, TValue> {
         alignment?: string;
     }
 }
@@ -32,13 +25,13 @@ export const columns: ColumnDef<Campaign>[] = [
         meta: {
             alignment: 'text-center'
         },
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         cell: ({ row }) => {
             const [isActive, setIsActive] = useState(row.original.activity_status);
 
             const handleStatusChange = (checked: boolean) => {
                 setIsActive(checked);
                 updateActivityStatus(row.original.id, checked)
-                // console.log('checked:', checked);
             }
 
             return (
@@ -109,8 +102,6 @@ export const columns: ColumnDef<Campaign>[] = [
             alignment: 'text-center'
         },
         cell: ({ row }) => {
-            const campaign = row.original
-
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -121,7 +112,6 @@ export const columns: ColumnDef<Campaign>[] = [
                     <DropdownMenuContent>
                         <DropdownMenuItem
                             onClick={() =>deleteCampaign(row.original.id)}
-                            // className='justify-center'
                         >
                             Delete <Trash2 />
                         </DropdownMenuItem>
@@ -168,8 +158,6 @@ async function deleteCampaign(campaignId: number) {
                 'Content-Type': 'application/json'
             }
         })
-
-        // console.log(campaignId);
 
         if (!response.ok) {
             updateNotifications('error', 'Error')

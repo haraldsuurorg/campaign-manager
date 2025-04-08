@@ -47,7 +47,6 @@ export function CampaignTable() {
         }
 
     }, [userId]);
-    // const data = await fetchCampaigns;
 
     return (
         <div>

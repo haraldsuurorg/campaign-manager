@@ -88,7 +88,6 @@ export function CampaignCreationForm() {
             });
 
             if (response.ok) {
-                const data = await response.json();
                 setFormStatus('submitted');
 
                 emitter.emit('campaigns-updated');

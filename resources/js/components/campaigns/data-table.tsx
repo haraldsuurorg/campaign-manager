@@ -60,7 +60,6 @@ export function DataTable<TData, TValue>({
                 />
                 <ToggleGroup
                     type='single'
-                    // value={String(table.getColumn('activity_status')?.getFilterValue() ?? '')}
                     onValueChange={(value) => {
                         if (value === 'true') {
                             table.getColumn('activity_status')?.setFilterValue(1);

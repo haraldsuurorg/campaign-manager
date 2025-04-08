@@ -1,6 +1,6 @@
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { MoveRight, Tally1, Tally2, Tally3, Tally4, Tally5 } from 'lucide-react';
+import { Tally1, Tally2, Tally3, Tally4, Tally5 } from 'lucide-react';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
@@ -44,7 +44,6 @@ export default function Welcome() {
                         <div className="flex-1 rounded-br-lg rounded-bl-lg bg-white p-6 pb-12 text-[13px] leading-[20px] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:rounded-tl-lg lg:rounded-br-none lg:p-20 dark:bg-[#161615] dark:text-[#EDEDEC] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
                             <h1 className="mb-1 font-medium text-xl">Welcome to my campaign manager app!</h1>
                             <p className="mb-2 text-[#706f6c] dark:text-[#A1A09A]">
-                                {/* It is created using: */}
                                 <div className='flex flex-col gap-2 py-4'>
                                     <div className='flex items-center gap-2'>
                                         <Tally1 />
@@ -75,7 +74,6 @@ export default function Welcome() {
                                         className="flex flex items-center gap-2 rounded-sm border border-black bg-[#1b1b18] px-5 py-1.5 text-sm leading-normal text-white hover:border-black hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:border-white dark:hover:bg-white"
                                     >
                                         <span>Go to the app</span>
-                                        {/* <MoveRight /> */}
                                     </a>
                                 </li>
                                 <li>
@@ -85,7 +83,6 @@ export default function Welcome() {
                                         className="flex flex items-center gap-2 rounded-sm border border-black bg-[#1b1b18] px-5 py-1.5 text-sm leading-normal text-white hover:border-black hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:border-white dark:hover:bg-white"
                                     >
                                         <span>See the code</span>
-                                        {/* <MoveRight /> */}
                                     </a>
                                 </li>
                             </ul>
