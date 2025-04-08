@@ -3,6 +3,7 @@ import { usePage } from "@inertiajs/react";
 import { SharedData } from "@/types"
 import { DataTable } from "./data-table";
 import { useEffect, useState } from "react";
+import { emitter } from "@/lib/utils";
 
 async function fetchCampaigns(userId: number): Promise<Campaign[]> {
     try {
@@ -14,7 +15,6 @@ async function fetchCampaigns(userId: number): Promise<Campaign[]> {
         })
 
         if (!response.ok) {
-            // updateNotifications('error', 'Error');
             console.error(response);
             return [];
         }
@@ -23,7 +23,6 @@ async function fetchCampaigns(userId: number): Promise<Campaign[]> {
         return data;
 
     } catch (err) {
-        // updateNotifications('error', 'Error');
         console.error('Error fetching campaigns: ', err);
         return [];
     }
@@ -35,6 +34,18 @@ export function CampaignTable() {
 
     useEffect(() => {
         fetchCampaigns(userId).then(setCampaigns);
+
+        const campaignsUpdated = () => {
+            console.log('campaigns updated');
+            fetchCampaigns(userId).then(setCampaigns);
+        }
+
+        emitter.on('campaigns-updated', campaignsUpdated);
+
+        return () => {
+            emitter.off('campaigns-updated', campaignsUpdated);
+        }
+
     }, [userId]);
     // const data = await fetchCampaigns;
 

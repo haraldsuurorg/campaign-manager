@@ -1,4 +1,4 @@
-import { boolean, number, z } from 'zod';
+import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -91,7 +91,7 @@ export function CampaignCreationForm() {
                 const data = await response.json();
                 setFormStatus('submitted');
 
-                emitter.emit('campaign-created');
+                emitter.emit('campaigns-updated');
             } else {
                 console.error('Server responded with error:', response.status);
                 setFormStatus('error');

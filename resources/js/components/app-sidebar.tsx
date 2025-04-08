@@ -5,29 +5,22 @@ import { CreateCampaign } from '@/components/create-campaign';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem, NavButton } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Plus } from 'lucide-react';
+import { Banana } from 'lucide-react';
 import AppLogo from './app-logo';
 
-// const [showCreateCampaign, setShowCreateCampaign] = useState(false);
-
-const mainNavItems: NavButton[] = [
-    // {
-    //     title: 'Create a campaign',
-    //     icon: Plus,
-    //     onClick: () => console.log('test'),
-    // },
+const mainNavItems: NavItem[] = [
+    {
+        title: 'Campaigns',
+        href: '/dashboard',
+        icon: Banana,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
     // {
     //     title: 'Repository',
-    //     href: 'https://github.com/laravel/react-starter-kit',
+    //     href: 'https://github.com/haraldsuurorg/campaign-manager',
     //     icon: Folder,
-    // },
-    // {
-    //     title: 'Documentation',
-    //     href: 'https://laravel.com/docs/starter-kits',
-    //     icon: BookOpen,
     // },
 ];
 
@@ -48,7 +41,6 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} />
-                <CreateCampaign />
             </SidebarContent>
 
             <SidebarFooter>

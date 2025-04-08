@@ -1,6 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Switch } from '../ui/switch';
 import { useState } from 'react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { Button } from '../ui/button';
+import { Ellipsis, Trash2 } from 'lucide-react';
+import { emitter } from '@/lib/utils';
 
 export type Campaign = {
     id: number
@@ -11,6 +15,12 @@ export type Campaign = {
     payout_bulgaria: number | null
 }
 
+declare module '@tanstack/react-table' {
+    interface ColumnMeta<TData extends unknown, TValue> {
+        alignment?: string;
+    }
+}
+
 export const columns: ColumnDef<Campaign>[] = [
     {
         accessorKey: 'title',
@@ -19,13 +29,16 @@ export const columns: ColumnDef<Campaign>[] = [
     {
         accessorKey: 'activity_status',
         header: 'Activity status',
+        meta: {
+            alignment: 'text-center'
+        },
         cell: ({ row }) => {
             const [isActive, setIsActive] = useState(row.original.activity_status);
-            console.log('row data', row.original);
 
             const handleStatusChange = (checked: boolean) => {
                 setIsActive(checked);
                 updateActivityStatus(row.original.id, checked)
+                // console.log('checked:', checked);
             }
 
             return (
@@ -36,11 +49,18 @@ export const columns: ColumnDef<Campaign>[] = [
                     />
                 </div>
             )
+        },
+        filterFn: (row, id, filterValue) => {
+            if (filterValue === undefined) return true;
+            return row.getValue(id) === filterValue;
         }
     },
     {
         accessorKey: 'payoutEstonia',
         header: 'Payout for Estonia',
+        meta: {
+            alignment: 'text-center'
+        },
         cell: ({ row }) => {
             const payoutValue = row.original.payout_estonia;
 
@@ -54,6 +74,9 @@ export const columns: ColumnDef<Campaign>[] = [
     {
         accessorKey: 'payoutSpain',
         header: 'Payout for Spain',
+        meta: {
+            alignment: 'text-center'
+        },
         cell: ({ row }) => {
             const payoutValue = row.original.payout_spain;
 
@@ -67,6 +90,9 @@ export const columns: ColumnDef<Campaign>[] = [
     {
         accessorKey: 'payoutBulgaria',
         header: 'Payout for Bulgaria',
+        meta: {
+            alignment: 'text-center'
+        },
         cell: ({ row }) => {
             const payoutValue = row.original.payout_bulgaria;
 
@@ -77,6 +103,33 @@ export const columns: ColumnDef<Campaign>[] = [
             }
         }
     },
+    {
+        id: 'actions',
+        meta: {
+            alignment: 'text-center'
+        },
+        cell: ({ row }) => {
+            const campaign = row.original
+
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant={'ghost'}>
+                            <Ellipsis />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuItem
+                            onClick={() =>deleteCampaign(row.original.id)}
+                            // className='justify-center'
+                        >
+                            Delete <Trash2 />
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )
+        }
+    }
 ]
 
 async function updateActivityStatus(campaignId: number, checked: boolean) {
@@ -107,6 +160,30 @@ async function updateActivityStatus(campaignId: number, checked: boolean) {
     }
 }
 
+async function deleteCampaign(campaignId: number) {
+    try {
+        const response = await fetch(`/api/campaigns/${campaignId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        // console.log(campaignId);
+
+        if (!response.ok) {
+            updateNotifications('error', 'Error')
+            console.error(response);
+        } else {
+            emitter.emit('campaigns-updated');
+            updateNotifications('update', 'Campaign deleted');
+        }
+    } catch(err) {
+        console.error('Error deleting the campaign', err);
+        updateNotifications('error', 'Error');
+    }
+}
+
 function updateNotifications(type:string, text:string) {
     const notifications = document.getElementById('notification-messages');
 
@@ -122,5 +199,5 @@ function updateNotifications(type:string, text:string) {
         if (notifications) {
             notifications.innerHTML = '';
         }
-    }, 5000);
+    }, 2000);
 }

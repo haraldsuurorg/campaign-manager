@@ -1,7 +1,11 @@
+import { useState } from "react";
 import {
     ColumnDef,
+    ColumnFiltersState,
     flexRender,
     getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
     useReactTable
 } from "@tanstack/react-table";
 
@@ -13,6 +17,11 @@ import {
     TableHeader,
     TableRow
 } from '@/components/ui/table'
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { CreateCampaign } from "../create-campaign";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -23,13 +32,83 @@ export function DataTable<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
+    const [columnFilters, setColumnFiltrs] = useState<ColumnFiltersState>([]);
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        onColumnFiltersChange: setColumnFiltrs,
+        getFilteredRowModel: getFilteredRowModel(),
+        state: {
+            columnFilters
+        }
     })
 
     return (
+        <>
+        <div className='flex justify-between mb-4 py-0.5'>
+            <div className="flex justify-start">
+                <CreateCampaign/>
+            </div>
+            <div className='flex gap-4'>
+                <Input
+                    placeholder='Search...'
+                    value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
+                    onChange={(event) => table.getColumn('title')?.setFilterValue(event.target.value)}
+                    className='min-w-sm'
+                />
+                <ToggleGroup
+                    type='single'
+                    // value={String(table.getColumn('activity_status')?.getFilterValue() ?? '')}
+                    onValueChange={(value) => {
+                        if (value === 'true') {
+                            table.getColumn('activity_status')?.setFilterValue(1);
+                            console.log('true:', value)
+                        } else if (value === 'false') {
+                            table.getColumn('activity_status')?.setFilterValue(0);
+                            console.log('false:', value)
+                        } else {
+                            table.getColumn('activity_status')?.setFilterValue(undefined);
+                        }
+                    }}
+                >
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <div>
+                                    <ToggleGroupItem
+                                        value='true'
+                                    >
+                                        Active
+                                    </ToggleGroupItem>
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <span>Show only active campaigns</span>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <div>
+                                    <ToggleGroupItem
+                                        value='false'
+                                    >
+                                        Inactive
+                                    </ToggleGroupItem>
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <span>Show only inactive campaigns</span>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </ToggleGroup>
+
+            </div>
+        </div>
         <div className='rounded-md border'>
             <Table>
                 <TableHeader>
@@ -37,7 +116,10 @@ export function DataTable<TData, TValue>({
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
                                 return  (
-                                    <TableHead key={header.id}>
+                                    <TableHead
+                                        key={header.id}
+                                        className={header.column.columnDef.meta?.alignment || ''}
+                                    >
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(
@@ -60,6 +142,7 @@ export function DataTable<TData, TValue>({
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell
                                         key={cell.id}
+                                        className={cell.column.columnDef.meta?.alignment || ''}
                                     >
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                     </TableCell>
@@ -73,10 +156,24 @@ export function DataTable<TData, TValue>({
                             </TableCell>
                         </TableRow>
                     )
-                
                 }
                 </TableBody>
             </Table>
         </div>
+        <div className="flex w-full justify-end gap-2 mt-4">
+            <Button
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+            >
+                Previous
+            </Button>
+            <Button
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+            >
+                Next
+            </Button>
+        </div>
+        </>
     )
 }

@@ -4,26 +4,19 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
     AlertDialogDescription,
-    AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogCancel } from './ui/alert-dialog';
 import { Button } from './ui/button';
-import { NavButton } from '@/types';
-import { SidebarMenuButton } from './ui/sidebar';
 import { CampaignCreationForm } from './create-campaign-form';
-import { X, Plus } from 'lucide-react';
-// {/* <Button>Create a campaign</Button> */}
+import { X } from 'lucide-react';
 
 export function CreateCampaign() {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <SidebarMenuButton
-                    tooltip={'Create a campaign'}
-                >
-                    <Plus className='ml-2'/>
-                    <span>Create a campaign</span>
-                </SidebarMenuButton>
+                <Button>
+                    Create a campaign
+                </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogCancel className='border-none w-fit absolute right-3 top-4.5 shadow-none'>

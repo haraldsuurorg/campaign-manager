@@ -96,6 +96,8 @@ class CampaignController extends Controller
      */
     public function destroy(Campaign $campaign)
     {
-        //
+        $campaign->delete();
+
+        return response()->noContent(200);
     }
 }

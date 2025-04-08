@@ -7,3 +7,4 @@ use Illuminate\Http\Request;
 Route::post('/campaigns', [CampaignController::class, 'store']);
 Route::get('/campaigns', [CampaignController::class, 'index']);
 Route::patch('campaigns/{campaign}', [CampaignController::class, 'update']);
+Route::delete('campaigns/{campaign}', [CampaignController::class, 'destroy']);
