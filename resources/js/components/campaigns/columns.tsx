@@ -25,8 +25,8 @@ export const columns: ColumnDef<Campaign>[] = [
         meta: {
             alignment: 'text-center'
         },
-        // eslint-disable-next-line react-hooks/rules-of-hooks
         cell: ({ row }) => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             const [isActive, setIsActive] = useState(row.original.activity_status);
 
             const handleStatusChange = (checked: boolean) => {
