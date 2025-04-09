@@ -30,7 +30,7 @@ export const columns: ColumnDef<Campaign>[] = [
         cell: ({ row }) => <ActivityStatusCell row={row} />,
         filterFn: (row, id, filterValue) => {
             if (filterValue === undefined) return true;
-            return row.getValue(id) === filterValue;
+            return Boolean(row.getValue(id)) === Boolean(filterValue);
         }
     },
     {
@@ -159,7 +159,7 @@ async function deleteCampaign(campaignId: number) {
 }
 
 function ActivityStatusCell({ row }: { row: Row<Campaign> }) {
-    const [isActive, setIsActive] = useState(row.original.activity_status);
+    const [isActive, setIsActive] = useState(Boolean(row.original.activity_status));
 
     const handleStatusChange = (checked: boolean) => {
         setIsActive(checked);
