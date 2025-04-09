@@ -6,6 +6,7 @@ import { Button } from '../ui/button';
 import { Ellipsis, Trash2 } from 'lucide-react';
 import { emitter } from '@/lib/utils';
 import { Campaign } from '@/types';
+import { updateNotifications } from '../notifications';
 
 declare module '@tanstack/react-table' {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -141,15 +142,15 @@ async function updateActivityStatus(campaignId: number, checked: boolean) {
         })
 
         if (!response.ok) {
-            updateNotifications('error', 'Error')
+            updateNotifications('error', `Error (${response.status}) updating activity status.`);
             console.error(response);
-        } else {
-            emitter.emit('campaigns-updated');
-            updateNotifications('update', 'Activity status updated');
         }
+
+        emitter.emit('campaigns-updated');
+        updateNotifications('update', 'Activity status updated');
     } catch(err) {
         console.error('Error updating the activity status', err);
-        updateNotifications('error', 'Error')
+        updateNotifications('error', 'Error');
     }
 }
 
@@ -163,32 +164,14 @@ async function deleteCampaign(campaignId: number) {
         })
 
         if (!response.ok) {
-            updateNotifications('error', 'Error')
+            updateNotifications('error', `Error (${response.status}) deleting the campaign`);
             console.error(response);
-        } else {
-            emitter.emit('campaigns-updated');
-            updateNotifications('update', 'Campaign deleted');
         }
+
+        emitter.emit('campaigns-updated');
+        updateNotifications('update', 'Campaign deleted');
     } catch(err) {
         console.error('Error deleting the campaign', err);
         updateNotifications('error', 'Error');
     }
-}
-
-function updateNotifications(type:string, text:string) {
-    const notifications = document.getElementById('notification-messages');
-
-    if (!notifications) return;
-
-    if (type === 'update') {
-        notifications.innerHTML = `<p class='text-sm text-[#23C552]'>${text}</p>`;
-    } else if (type === 'error') {
-        notifications.innerHTML = `<p class='text-sm text-[#F84F31]'>${text}</p>`;
-    }
-
-    setTimeout(() => {
-        if (notifications) {
-            notifications.innerHTML = '';
-        }
-    }, 2000);
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Campaign extends Model
-{   
+{
     /**
      * The attributes that are mass assignable.
      *

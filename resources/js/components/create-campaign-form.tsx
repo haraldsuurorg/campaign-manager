@@ -17,6 +17,23 @@ import { usePage } from '@inertiajs/react';
 import { SharedData } from '@/types';
 import { emitter } from '@/lib/utils';
 
+const payoutValidator = () => (
+    z.number().positive().optional().nullable()
+        .refine((data) => {
+            if (!data) return true;
+            const decimalPart = data.toString().split('.')[1];
+            return !decimalPart || decimalPart.length <= 2;
+        }, {
+            message: 'Max precision is 2 decimal places'
+        })
+        .refine((data) => {
+            if (!data) return true;
+            return data < 999999999;
+        }, {
+            message: 'Please enter a smaller value'
+        })
+);
+
 const formSchema = z.object({
     title: z.string({
         message: 'Please enter a title'
@@ -26,15 +43,9 @@ const formSchema = z.object({
         message: 'Title must be less than 50 characters'
     }),
     activityStatus: z.boolean(),
-    payoutEstonia: z.number().positive().optional().nullable().refine((data) => {
-        if (!data) return true;
-        const decimalPart = data.toString().split('.')[1];
-        return !decimalPart || decimalPart.length <= 2;
-    }, {
-        message: 'Max precision is 2 decimal places'
-    }),
-    payoutSpain: z.number().positive().optional().nullable(),
-    payoutBulgaria: z.number().positive().optional().nullable(),
+    payoutEstonia: payoutValidator(),
+    payoutSpain: payoutValidator(),
+    payoutBulgaria: payoutValidator(),
 }).refine((data) => {
     return data.payoutEstonia !== null && data.payoutEstonia !== undefined ||
            data.payoutSpain !== null && data.payoutSpain !== undefined ||
@@ -87,15 +98,14 @@ export function CampaignCreationForm() {
                 body: JSON.stringify(campaignData)
             });
 
-            if (response.ok) {
-                setFormStatus('submitted');
-
-                emitter.emit('campaigns-updated');
-            } else {
+            if (!response.ok) {
                 console.error('Server responded with error:', response.status);
                 setFormStatus('error');
                 return;
             }
+
+            setFormStatus('submitted');
+            emitter.emit('campaigns-updated');
         } catch (err) {
             console.error('Error creating campaign:', err);
             setFormStatus('error');
