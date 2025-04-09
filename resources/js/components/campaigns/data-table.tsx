@@ -61,12 +61,10 @@ export function DataTable<TData, TValue>({
                 <ToggleGroup
                     type='single'
                     onValueChange={(value) => {
-                        if (value === 'true') {
+                        if (value === '1') {
                             table.getColumn('activity_status')?.setFilterValue(1);
-                            console.log('true:', value)
-                        } else if (value === 'false') {
+                        } else if (value === '0') {
                             table.getColumn('activity_status')?.setFilterValue(0);
-                            console.log('false:', value)
                         } else {
                             table.getColumn('activity_status')?.setFilterValue(undefined);
                         }
@@ -77,7 +75,7 @@ export function DataTable<TData, TValue>({
                             <TooltipTrigger asChild>
                                 <div>
                                     <ToggleGroupItem
-                                        value='true'
+                                        value='1'
                                     >
                                         Active
                                     </ToggleGroupItem>
@@ -93,7 +91,7 @@ export function DataTable<TData, TValue>({
                             <TooltipTrigger asChild>
                                 <div>
                                     <ToggleGroupItem
-                                        value='false'
+                                        value='0'
                                     >
                                         Inactive
                                     </ToggleGroupItem>

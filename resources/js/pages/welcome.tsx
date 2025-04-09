@@ -42,11 +42,9 @@ export default function Welcome() {
                     <main className="flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
                         <div className="flex-1 rounded-br-lg rounded-bl-lg bg-white p-6 pb-12 text-[13px] leading-[20px] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:rounded-tl-lg lg:rounded-br-none lg:p-20 dark:bg-[#161615] dark:text-[#EDEDEC] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
                             <h1 className="mb-1 font-medium text-xl">Welcome to my campaign manager app!</h1>
-                            <p className="mb-2 text-[#706f6c] dark:text-[#A1A09A]">
-                                <div className='flex flex-col gap-2 py-4'>
-                                    This application is built with Laravel 12 powering the backend and React with TypeScript driving the frontend experience. After signing in, users can create campaigns, manage their activity status, and remove them when necessary. The platform offers convenient search functionality by campaign title and filtering options based on activity status.
-                                </div>
-                            </p>
+                            <div className='flex flex-col gap-2 py-4 mb-1 text-[#706f6c] dark:text-[#A1A09A]'>
+                                This application is built with Laravel 12 powering the backend and React with TypeScript driving the frontend experience. After signing in, users can create campaigns, manage their activity status, and remove them when necessary. The platform offers convenient search functionality by campaign title and filtering options based on activity status.
+                            </div>
                             <ul className="flex gap-3 text-sm leading-normal">
                                 <li>
                                     <a

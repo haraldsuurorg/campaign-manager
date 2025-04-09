@@ -1,4 +1,5 @@
-import { Campaign, columns } from "./columns";
+import { columns } from "./columns";
+import { Campaign } from "@/types";
 import { usePage } from "@inertiajs/react";
 import { SharedData } from "@/types"
 import { DataTable } from "./data-table";
@@ -35,15 +36,16 @@ export function CampaignTable() {
     useEffect(() => {
         fetchCampaigns(userId).then(setCampaigns);
 
-        const campaignsUpdated = () => {
-            console.log('campaigns updated');
+        const loadCampaigns = () => {
             fetchCampaigns(userId).then(setCampaigns);
         }
 
-        emitter.on('campaigns-updated', campaignsUpdated);
+        loadCampaigns();
+
+        emitter.on('campaigns-updated', loadCampaigns);
 
         return () => {
-            emitter.off('campaigns-updated', campaignsUpdated);
+            emitter.off('campaigns-updated', loadCampaigns);
         }
 
     }, [userId]);

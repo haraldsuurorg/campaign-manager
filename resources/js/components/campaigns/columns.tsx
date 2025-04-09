@@ -25,17 +25,18 @@ export const columns: ColumnDef<Campaign>[] = [
         meta: {
             alignment: 'text-center'
         },
-        cell: ({ row }) => {
+        cell: ({ row, column, table }) => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             const [isActive, setIsActive] = useState(row.original.activity_status);
 
             const handleStatusChange = (checked: boolean) => {
                 setIsActive(checked);
-                updateActivityStatus(row.original.id, checked)
+                (row.original.activity_status as any) = checked ? 1 : 0;
+                updateActivityStatus(row.original.id, checked);
             }
 
             return (
-                <div onClick={(e) => e.stopPropagation()}>
+                <div>
                     <Switch
                         checked={isActive}
                         onCheckedChange={handleStatusChange}
@@ -142,6 +143,7 @@ async function updateActivityStatus(campaignId: number, checked: boolean) {
             updateNotifications('error', 'Error')
             console.error(response);
         } else {
+            emitter.emit('campaigns-updated');
             updateNotifications('update', 'Activity status updated');
         }
     } catch(err) {
