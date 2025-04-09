@@ -7,6 +7,7 @@ import { Ellipsis, Trash2 } from 'lucide-react';
 import { emitter } from '@/lib/utils';
 import { Campaign } from '@/types';
 import { updateNotifications } from '../notifications';
+import { Row } from '@tanstack/react-table';
 
 declare module '@tanstack/react-table' {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -26,26 +27,7 @@ export const columns: ColumnDef<Campaign>[] = [
         meta: {
             alignment: 'text-center'
         },
-        cell: ({ row }) => {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            const [isActive, setIsActive] = useState(row.original.activity_status);
-
-            const handleStatusChange = (checked: boolean) => {
-                setIsActive(checked);
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (row.original.activity_status as any) = checked ? 1 : 0;
-                updateActivityStatus(row.original.id, checked);
-            }
-
-            return (
-                <div>
-                    <Switch
-                        checked={isActive}
-                        onCheckedChange={handleStatusChange}
-                    />
-                </div>
-            )
-        },
+        cell: ({ row }) => <ActivityStatusCell row={row} />,
         filterFn: (row, id, filterValue) => {
             if (filterValue === undefined) return true;
             return row.getValue(id) === filterValue;
@@ -174,4 +156,23 @@ async function deleteCampaign(campaignId: number) {
         console.error('Error deleting the campaign', err);
         updateNotifications('error', 'Error');
     }
+}
+
+function ActivityStatusCell({ row }: { row: Row<Campaign> }) {
+    const [isActive, setIsActive] = useState(row.original.activity_status);
+
+    const handleStatusChange = (checked: boolean) => {
+        setIsActive(checked);
+        row.original.activity_status = checked ? 1 : 0;
+        updateActivityStatus(row.original.id, checked);
+    }
+
+    return (
+        <div>
+            <Switch
+                checked={Boolean(isActive)}
+                onCheckedChange={handleStatusChange}
+            />
+        </div>
+    );
 }

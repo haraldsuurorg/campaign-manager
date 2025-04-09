@@ -52,7 +52,7 @@ export interface User {
 export interface Campaign {
     id: number;
     title: string;
-    activity_status: boolean;
+    activity_status: boolean | number;
     payout_estonia: number | null;
     payout_spain: number | null;
     payout_bulgaria: number | null;
