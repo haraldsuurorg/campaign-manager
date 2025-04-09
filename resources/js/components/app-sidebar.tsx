@@ -1,9 +1,8 @@
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
-import { CreateCampaign } from '@/components/create-campaign';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem, NavButton } from '@/types';
+import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { Banana } from 'lucide-react';
 import AppLogo from './app-logo';

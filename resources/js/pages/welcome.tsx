@@ -1,6 +1,5 @@
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { Tally1, Tally2, Tally3, Tally4, Tally5 } from 'lucide-react';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
@@ -45,26 +44,7 @@ export default function Welcome() {
                             <h1 className="mb-1 font-medium text-xl">Welcome to my campaign manager app!</h1>
                             <p className="mb-2 text-[#706f6c] dark:text-[#A1A09A]">
                                 <div className='flex flex-col gap-2 py-4'>
-                                    <div className='flex items-center gap-2'>
-                                        <Tally1 />
-                                        <span className='text-lg'>Laravel 12</span>
-                                    </div>
-                                    <div className='flex items-center gap-2'>
-                                        <Tally2 />
-                                        <span className='text-lg'>React</span>
-                                    </div>
-                                    <div className='flex items-center gap-2'>
-                                        <Tally3 />
-                                        <span className='text-lg'>Typescript</span>
-                                    </div>
-                                    <div className='flex items-center gap-2'>
-                                        <Tally4 />
-                                        <span className='text-lg'>Shadcn UI</span>
-                                    </div>
-                                    <div className='flex items-center gap-2'>
-                                        <Tally5 />
-                                        <span className='text-lg'>Lucide icons</span>
-                                    </div>
+                                    This application is built with Laravel 12 powering the backend and React with TypeScript driving the frontend experience. After signing in, users can create campaigns, manage their activity status, and remove them when necessary. The platform offers convenient search functionality by campaign title and filtering options based on activity status.
                                 </div>
                             </p>
                             <ul className="flex gap-3 text-sm leading-normal">

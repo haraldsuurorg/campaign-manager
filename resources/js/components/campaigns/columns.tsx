@@ -109,7 +109,7 @@ export const columns: ColumnDef<Campaign>[] = [
                             <Ellipsis />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent>
+                    <DropdownMenuContent className='min-w-0'>
                         <DropdownMenuItem
                             onClick={() =>deleteCampaign(row.original.id)}
                         >
